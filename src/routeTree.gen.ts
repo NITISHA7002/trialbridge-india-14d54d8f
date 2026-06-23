@@ -9,38 +9,188 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as FindTrialsRouteImport } from './routes/find-trials'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicSimplifyRouteImport } from './routes/api/public/simplify'
+import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindTrialsRoute = FindTrialsRouteImport.update({
+  id: '/find-trials',
+  path: '/find-trials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSimplifyRoute = ApiPublicSimplifyRouteImport.update({
+  id: '/api/public/simplify',
+  path: '/api/public/simplify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
+  id: '/api/public/chat',
+  path: '/api/public/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/assistant': typeof AssistantRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/find-trials': typeof FindTrialsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/simplify': typeof ApiPublicSimplifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/assistant': typeof AssistantRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/find-trials': typeof FindTrialsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/simplify': typeof ApiPublicSimplifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/assistant': typeof AssistantRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/find-trials': typeof FindTrialsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/simplify': typeof ApiPublicSimplifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/assistant'
+    | '/contact'
+    | '/faq'
+    | '/find-trials'
+    | '/sitemap.xml'
+    | '/api/public/chat'
+    | '/api/public/simplify'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/assistant'
+    | '/contact'
+    | '/faq'
+    | '/find-trials'
+    | '/sitemap.xml'
+    | '/api/public/chat'
+    | '/api/public/simplify'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/assistant'
+    | '/contact'
+    | '/faq'
+    | '/find-trials'
+    | '/sitemap.xml'
+    | '/api/public/chat'
+    | '/api/public/simplify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AssistantRoute: typeof AssistantRoute
+  ContactRoute: typeof ContactRoute
+  FaqRoute: typeof FaqRoute
+  FindTrialsRoute: typeof FindTrialsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicChatRoute: typeof ApiPublicChatRoute
+  ApiPublicSimplifyRoute: typeof ApiPublicSimplifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/find-trials': {
+      id: '/find-trials'
+      path: '/find-trials'
+      fullPath: '/find-trials'
+      preLoaderRoute: typeof FindTrialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +198,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/simplify': {
+      id: '/api/public/simplify'
+      path: '/api/public/simplify'
+      fullPath: '/api/public/simplify'
+      preLoaderRoute: typeof ApiPublicSimplifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/chat': {
+      id: '/api/public/chat'
+      path: '/api/public/chat'
+      fullPath: '/api/public/chat'
+      preLoaderRoute: typeof ApiPublicChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AssistantRoute: AssistantRoute,
+  ContactRoute: ContactRoute,
+  FaqRoute: FaqRoute,
+  FindTrialsRoute: FindTrialsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicChatRoute: ApiPublicChatRoute,
+  ApiPublicSimplifyRoute: ApiPublicSimplifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
