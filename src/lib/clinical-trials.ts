@@ -73,7 +73,7 @@ function scoreTrial(t: Omit<Trial, "matchScore" | "matchReasons">, input: Search
   }
 
   // Gender match: 15
-  if (input.gender && input.gender !== "" && input.gender !== "All") {
+  if (input.gender && input.gender !== "All") {
     const sex = (t.sex || "ALL").toUpperCase();
     if (sex === "ALL" || sex === input.gender.toUpperCase()) {
       score += 15;
