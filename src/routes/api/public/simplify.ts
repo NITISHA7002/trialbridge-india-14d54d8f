@@ -7,13 +7,13 @@ type Body = {
   intervention?: string;
 };
 
-const MODEL = "claude-sonnet-4-5-20250929";
+const MODEL = "google/gemini-2.5-flash";
 
 export const Route = createFileRoute("/api/public/simplify")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const key = process.env.ANTHROPIC_API_KEY;
+        const key = process.env.LOVABLE_API_KEY;
         if (!key) {
           return Response.json({ error: "Server not configured" }, { status: 500 });
         }
@@ -52,26 +52,26 @@ Eligibility: ${eligibility}
 Treatment: ${intervention}`;
 
         try {
-          const res = await fetch("https://api.anthropic.com/v1/messages", {
+          const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "x-api-key": key,
-              "anthropic-version": "2023-06-01",
+              Authorization: `Bearer ${key}`,
             },
             body: JSON.stringify({
               model: MODEL,
-              max_tokens: 800,
               messages: [{ role: "user", content: prompt }],
             }),
           });
           if (!res.ok) {
             const detail = await res.text();
-            console.error("Anthropic simplify error", res.status, detail);
+            console.error("AI simplify error", res.status, detail);
             return Response.json({ error: "AI error" }, { status: 502 });
           }
-          const data = (await res.json()) as { content?: { text?: string }[] };
-          const text = data.content?.[0]?.text ?? "";
+          const data = (await res.json()) as {
+            choices?: { message?: { content?: string } }[];
+          };
+          const text = data.choices?.[0]?.message?.content ?? "";
           return Response.json({ text });
         } catch (e) {
           console.error("simplify failed", e);

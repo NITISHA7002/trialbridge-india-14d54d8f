@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 type Msg = { role: "user" | "assistant"; content: string };
 type Body = { messages?: Msg[] };
 
-const MODEL = "claude-sonnet-4-5-20250929";
+const MODEL = "google/gemini-2.5-flash";
 
 const SYSTEM = `You are TrialBridge Assistant helping Indian patients understand clinical trials. Rules:
 - Answer in simple everyday English only
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/api/public/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const key = process.env.ANTHROPIC_API_KEY;
+        const key = process.env.LOVABLE_API_KEY;
         if (!key) {
           return Response.json({ error: "Server not configured" }, { status: 500 });
         }
@@ -28,27 +28,32 @@ export const Route = createFileRoute("/api/public/chat")({
         }
 
         try {
-          const res = await fetch("https://api.anthropic.com/v1/messages", {
+          const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "x-api-key": key,
-              "anthropic-version": "2023-06-01",
+              Authorization: `Bearer ${key}`,
             },
             body: JSON.stringify({
               model: MODEL,
-              max_tokens: 400,
-              system: SYSTEM,
-              messages: messages.map((m) => ({ role: m.role, content: String(m.content ?? "") })),
+              messages: [
+                { role: "system", content: SYSTEM },
+                ...messages.map((m) => ({
+                  role: m.role,
+                  content: String(m.content ?? ""),
+                })),
+              ],
             }),
           });
           if (!res.ok) {
             const detail = await res.text();
-            console.error("Anthropic chat error", res.status, detail);
+            console.error("AI chat error", res.status, detail);
             return Response.json({ error: "AI error" }, { status: 502 });
           }
-          const data = (await res.json()) as { content?: { text?: string }[] };
-          const text = data.content?.[0]?.text ?? "";
+          const data = (await res.json()) as {
+            choices?: { message?: { content?: string } }[];
+          };
+          const text = data.choices?.[0]?.message?.content ?? "";
           return Response.json({ text });
         } catch (e) {
           console.error("chat failed", e);
