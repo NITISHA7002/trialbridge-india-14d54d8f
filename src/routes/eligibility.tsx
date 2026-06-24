@@ -132,14 +132,13 @@ function EligibilityCard({ trial, input }: { trial: Trial; input: SearchInput })
   return (
     <article className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3">
       <div className="flex items-start justify-between gap-3">
-        <a
-          href={`https://clinicaltrials.gov/study/${trial.nctId}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          to="/find-trials"
+          search={{ nctId: trial.nctId }}
           className="font-semibold text-[color:var(--brand-dark)] hover:underline leading-snug"
         >
           {trial.title}
-        </a>
+        </Link>
         <span
           className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
             isLikely
