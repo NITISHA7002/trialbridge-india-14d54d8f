@@ -20,27 +20,30 @@ export const Route = createFileRoute("/api/public/simplify")({
         const body = (await request.json().catch(() => ({}))) as Body;
         const { title = "", description = "", eligibility = "", intervention = "" } = body;
 
-        const prompt = `Rewrite this clinical trial in simple English for an Indian patient with no medical background.
+        const prompt = `Do not write any introduction or preamble. Start your response directly with the 🔬 emoji. No intro sentences before the sections.
+
+Rewrite this clinical trial in simple English for an Indian patient with no medical background.
 Never use drug names — say "a new medicine" instead.
 Never use medical codes or numbers like Gy or mg.
-Use this exact structure:
+Never use the word "we" — always say "doctors" or "the study team" instead.
+Use this exact structure and use • for bullet points (never use hyphens "-"):
 
 🔬 What is this trial about?
 Write 2 simple sentences only.
 
 👤 Who can join?
-- bullet point 1
-- bullet point 2
-- bullet point 3
+• bullet point 1
+• bullet point 2
+• bullet point 3
 
 ⚠️ Who cannot join?
-- bullet point 1
-- bullet point 2
+• bullet point 1
+• bullet point 2
 
 🏥 What will happen to you?
-- bullet point 1
-- bullet point 2
-- bullet point 3
+• bullet point 1
+• bullet point 2
+• bullet point 3
 
 📞 How to apply?
 One sentence about contacting the hospital.
