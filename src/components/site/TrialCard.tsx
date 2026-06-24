@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, MapPin, Share2 } from "lucide-react";
+import { ChevronDown, Mail, MapPin, Phone, Share2 } from "lucide-react";
 import type { Trial } from "@/lib/clinical-trials";
 import { SimplifiedSummary } from "./SimplifiedSummary";
 import { RegisterInterestModal } from "./RegisterInterestModal";
@@ -14,7 +14,6 @@ export function TrialCard({ trial }: { trial: Trial }) {
   const [showElig, setShowElig] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
-  const primaryLocation = trial.locations[0];
   const shareText = `Clinical trial in India: ${trial.title} (${trial.nctId}). Learn more: https://clinicaltrials.gov/study/${trial.nctId}`;
   const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
@@ -27,11 +26,14 @@ export function TrialCard({ trial }: { trial: Trial }) {
             <span>Phase: {trial.phase}</span>
             <span>NCT ID: {trial.nctId}</span>
           </div>
-          {primaryLocation && (
-            <div className="text-xs text-muted-foreground flex items-center gap-1">
-              <MapPin className="h-3 w-3" />
-              {primaryLocation.facility} {primaryLocation.city && `· ${primaryLocation.city}`}
-              {trial.locations.length > 1 && ` (+${trial.locations.length - 1} more)`}
+          {trial.locations.length > 0 && (
+            <div className="text-xs text-muted-foreground flex items-start gap-1">
+              <MapPin className="h-3 w-3 mt-0.5 shrink-0" />
+              <span>
+                {trial.locations
+                  .map((l) => [l.facility, l.city].filter(Boolean).join(" · "))
+                  .join(" • ")}
+              </span>
             </div>
           )}
         </div>
@@ -72,6 +74,30 @@ export function TrialCard({ trial }: { trial: Trial }) {
       )}
 
       <SimplifiedSummary trial={trial} />
+
+      <div className="rounded-md border border-border bg-muted/30 p-3 text-xs space-y-1.5">
+        {trial.contacts.length > 0 ? (
+          trial.contacts.map((c, i) => (
+            <div key={i} className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              {c.name && <span className="font-medium text-[color:var(--brand-dark)]">{c.name}</span>}
+              {c.phone && (
+                <a href={`tel:${c.phone}`} className="inline-flex items-center gap-1 text-primary hover:underline">
+                  <Phone className="h-3 w-3" /> {c.phone}
+                </a>
+              )}
+              {c.email && (
+                <a href={`mailto:${c.email}`} className="inline-flex items-center gap-1 text-primary hover:underline break-all">
+                  <Mail className="h-3 w-3" /> {c.email}
+                </a>
+              )}
+            </div>
+          ))
+        ) : (
+          <div className="text-muted-foreground">
+            Contact via ClinicalTrials.gov — NCT ID: {trial.nctId}
+          </div>
+        )}
+      </div>
 
       <div className="flex flex-wrap gap-2 pt-1">
         <button
