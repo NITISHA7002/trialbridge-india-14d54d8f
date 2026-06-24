@@ -20,6 +20,7 @@ export type Trial = {
   maxAge: number | null;
   sex: string;
   locations: { facility: string; city: string; country: string }[];
+  contacts: { name: string; phone: string; email: string }[];
   matchScore: number;
   matchReasons: string[];
   description: string;
@@ -131,6 +132,26 @@ export async function searchTrials(input: SearchInput): Promise<Trial[]> {
         country: l.country ?? "",
       }));
 
+    const centralContacts = ((contacts.centralContacts ?? []) as any[]).map((c) => ({
+      name: c.name ?? "",
+      phone: c.phone ?? "",
+      email: c.email ?? "",
+    }));
+    const locationContacts = ((contacts.locations ?? []) as any[])
+      .filter((l) => (l.country ?? "").toLowerCase() === "india")
+      .flatMap((l) => (l.contacts ?? []) as any[])
+      .map((c) => ({ name: c.name ?? "", phone: c.phone ?? "", email: c.email ?? "" }));
+    const allContacts = [...centralContacts, ...locationContacts].filter(
+      (c) => c.phone || c.email,
+    );
+    const seen = new Set<string>();
+    const dedupedContacts = allContacts.filter((c) => {
+      const k = `${c.phone}|${c.email}`;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+
     const base = {
       nctId: id.nctId ?? "",
       title: id.briefTitle ?? "Untitled trial",
@@ -144,6 +165,7 @@ export async function searchTrials(input: SearchInput): Promise<Trial[]> {
       maxAge: parseAgeYears(elig.maximumAge),
       sex: elig.sex ?? "ALL",
       locations,
+      contacts: dedupedContacts,
       description: desc.briefSummary ?? "",
     };
 

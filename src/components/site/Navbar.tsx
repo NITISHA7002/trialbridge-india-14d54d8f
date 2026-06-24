@@ -9,7 +9,6 @@ const NAV = [
   { to: "/faq", label: "FAQ" },
   { to: "/assistant", label: "AI Assistant" },
   { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
 ] as const;
 
 export function Navbar() {

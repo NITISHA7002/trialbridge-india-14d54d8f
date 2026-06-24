@@ -18,16 +18,15 @@ function AboutPage() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 py-16">
         <div className="text-center">
           <h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--brand-dark)]">About TrialBridge India</h1>
-          <p className="mt-3 text-muted-foreground">Built by students, for patients.</p>
         </div>
 
-        <div className="mt-10 rounded-2xl border border-border bg-card p-6 text-center">
-          <p className="text-[color:var(--brand-dark)] font-semibold">
-            Project vision and creation by NANDINI GANDHI &amp; NITISHA SOLANKI
-          </p>
-        </div>
+        <p className="mt-10 text-center text-lg sm:text-xl font-medium leading-relaxed text-[color:var(--brand-dark)]">
+          Two students from MITS Gwalior who believed patients deserve better.
+          <br />
+          Built by Nandini Gandhi &amp; Nitisha Solanki.
+        </p>
 
-        <div className="mt-8 rounded-2xl bg-[color:var(--brand)] text-primary-foreground p-8 shadow-sm">
+        <div className="mt-10 rounded-2xl bg-[color:var(--brand)] text-primary-foreground p-8 shadow-sm">
           <h2 className="text-xl font-semibold">Our Vision</h2>
           <p className="mt-3 text-sm leading-relaxed text-primary-foreground/95">
             Every year in India, hundreds of life-saving clinical trials go unfilled
