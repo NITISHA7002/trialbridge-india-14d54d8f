@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, MessageCircle, Hospital, ShieldCheck, Lock, HeartHandshake, Database, Globe2, Activity } from "lucide-react";
+import heroImage from "@/assets/hackthone-photo.webp.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,34 +20,46 @@ function Home() {
     <div>
       {/* Hero */}
       <section className="bg-gradient-to-b from-[color:var(--brand-soft)] to-background">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-20 sm:py-28 text-center">
-          <span className="inline-block rounded-full bg-[color:var(--brand)]/10 text-[color:var(--brand-dark)] text-xs font-medium px-3 py-1 mb-6">
-            For patients across India · Always free
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-bold text-[color:var(--brand-dark)] leading-tight">
-            Find clinical trials in India,<br className="hidden sm:block" /> explained in simple language.
-          </h1>
-          <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-            TrialBridge connects Indian patients with recruiting clinical trials from
-            ClinicalTrials.gov, and rewrites the complex medical text into plain English you
-            can actually understand.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              to="/find-trials"
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90"
-            >
-              <Search className="h-4 w-4" /> Find a Trial
-            </Link>
-            <Link
-              to="/assistant"
-              className="inline-flex items-center gap-2 rounded-md border border-[color:var(--brand)] text-[color:var(--brand-dark)] px-5 py-3 text-sm font-semibold hover:bg-[color:var(--brand-soft)]"
-            >
-              <MessageCircle className="h-4 w-4" /> Ask the AI Assistant
-            </Link>
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-20 sm:py-28">
+          <div className="grid gap-10 items-center lg:grid-cols-2">
+            <div className="text-center">
+              <span className="inline-block rounded-full bg-[color:var(--brand)]/10 text-[color:var(--brand-dark)] text-xs font-medium px-3 py-1 mb-6">
+                For patients across India · Always free
+              </span>
+              <h1 className="text-3xl sm:text-5xl font-bold text-[color:var(--brand-dark)] leading-tight">
+                Find clinical trials in India,<br className="hidden sm:block" /> explained in simple language.
+              </h1>
+              <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+                TrialBridge connects Indian patients with recruiting clinical trials from
+                ClinicalTrials.gov, and rewrites the complex medical text into plain English you
+                can actually understand.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <Link
+                  to="/find-trials"
+                  className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                >
+                  <Search className="h-4 w-4" /> Find a Trial
+                </Link>
+                <Link
+                  to="/assistant"
+                  className="inline-flex items-center gap-2 rounded-md border border-[color:var(--brand)] text-[color:var(--brand-dark)] px-5 py-3 text-sm font-semibold hover:bg-[color:var(--brand-soft)]"
+                >
+                  <MessageCircle className="h-4 w-4" /> Ask the AI Assistant
+                </Link>
+              </div>
+            </div>
+            <div className="flex justify-center lg:justify-end">
+              <img
+                src={heroImage.url}
+                alt="Doctor consulting with a patient and family member"
+                className="rounded-2xl shadow-lg w-full max-w-md object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
+
 
       {/* How it works */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16">
