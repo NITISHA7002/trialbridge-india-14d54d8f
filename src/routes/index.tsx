@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Search, MessageCircle, Hospital, ShieldCheck } from "lucide-react";
+import { Search, MessageCircle, Hospital, ShieldCheck, Lock, HeartHandshake, Database, Globe2, Activity } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -80,6 +80,49 @@ function Home() {
               <div className="mt-1 text-sm text-muted-foreground">{s.l}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Why Trust TrialBridge */}
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 py-16">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[color:var(--brand-dark)]">
+          Why Trust TrialBridge
+        </h2>
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[
+            { icon: ShieldCheck, title: "Official source", body: "Every trial comes directly from ClinicalTrials.gov, the U.S. government registry." },
+            { icon: Lock, title: "Private by default", body: "No search data is stored. Your name and phone are only shared if you choose to register." },
+            { icon: HeartHandshake, title: "Built for patients", body: "Free forever. Plain-English summaries created for Indian patients with no medical background." },
+            { icon: Database, title: "Always up to date", body: "Results are fetched live every time you search — no stale or outdated listings." },
+          ].map(({ icon: Icon, title, body }) => (
+            <div key={title} className="rounded-2xl border border-border bg-card p-5">
+              <div className="h-10 w-10 rounded-lg bg-[color:var(--brand-soft)] flex items-center justify-center text-[color:var(--brand-dark)]">
+                <Icon className="h-5 w-5" />
+              </div>
+              <h3 className="mt-3 font-semibold text-[color:var(--brand-dark)]">{title}</h3>
+              <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Powered by Official Data */}
+      <section className="bg-[color:var(--brand)] text-primary-foreground">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12 text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold">Powered by Official Data</h2>
+          <div className="mt-8 grid sm:grid-cols-3 gap-8">
+            {[
+              { icon: Globe2, n: "ClinicalTrials.gov", l: "U.S. National Library of Medicine" },
+              { icon: Activity, n: "Live API", l: "Real-time recruiting trials in India" },
+              { icon: ShieldCheck, n: "Ethics-approved", l: "Every listed trial cleared by a regulator" },
+            ].map(({ icon: Icon, n, l }) => (
+              <div key={l} className="flex flex-col items-center">
+                <Icon className="h-7 w-7 opacity-90" />
+                <div className="mt-3 text-lg font-semibold">{n}</div>
+                <div className="mt-1 text-sm text-primary-foreground/85">{l}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
