@@ -6,7 +6,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 const GREETING: Msg = {
   role: "assistant",
   content:
-    "Hello! I am your TrialBridge Assistant. I can explain clinical trials in simple language. Ask me anything — like what does Phase 2 mean, or is joining a trial safe?",
+    "Namaste! I'm your Clinical Trial Guide. Ask me to explain medical terms, trial phases, eligibility, or what joining a study means. I'm here to help — not to give medical advice.",
 };
 
 function formatReply(content: string) {
