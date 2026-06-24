@@ -1,10 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Loader2, Search } from "lucide-react";
 import { searchTrials, type SearchInput, type Trial } from "@/lib/clinical-trials";
 import { TrialCard } from "@/components/site/TrialCard";
 
 export const Route = createFileRoute("/find-trials")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    city: typeof s.city === "string" ? s.city : undefined,
+    condition: typeof s.condition === "string" ? s.condition : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Find Clinical Trials in India — TrialBridge" },
@@ -17,7 +21,20 @@ export const Route = createFileRoute("/find-trials")({
 });
 
 function FindTrials() {
-  const [form, setForm] = useState<SearchInput>({ condition: "", age: null, gender: "", city: "" });
+  const search = useSearch({ from: "/find-trials" });
+  const [form, setForm] = useState<SearchInput>({
+    condition: search.condition ?? "",
+    age: null,
+    gender: "",
+    city: search.city ?? "",
+  });
+  useEffect(() => {
+    setForm((f) => ({
+      ...f,
+      condition: search.condition ?? f.condition,
+      city: search.city ?? f.city,
+    }));
+  }, [search.condition, search.city]);
   const [results, setResults] = useState<Trial[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
