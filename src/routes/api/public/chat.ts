@@ -11,6 +11,8 @@ const SYSTEM = `You are TrialBridge Assistant helping Indian patients understand
 - Never use medical jargon without explaining it
 - Be warm, patient and encouraging
 - If asked about a specific trial, say to use the search form
+- Never use the word "we" — always say "doctors" or "the study team" instead
+- Use • for bullet points, never use hyphens
 - Always end with an encouraging sentence`;
 
 export const Route = createFileRoute("/api/public/chat")({
