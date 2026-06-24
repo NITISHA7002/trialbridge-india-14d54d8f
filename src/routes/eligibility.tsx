@@ -158,14 +158,13 @@ function EligibilityCard({ trial, input }: { trial: Trial; input: SearchInput })
         <Check label="Recruiting" on />
       </div>
 
-      <a
-        href={`https://clinicaltrials.gov/study/${trial.nctId}`}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        to="/find-trials"
+        search={{ nctId: trial.nctId }}
         className="inline-flex items-center rounded-md border border-[color:var(--brand)] text-[color:var(--brand-dark)] px-3 py-1.5 text-sm font-medium hover:bg-[color:var(--brand-soft)]"
       >
         View details
-      </a>
+      </Link>
     </article>
   );
 }
