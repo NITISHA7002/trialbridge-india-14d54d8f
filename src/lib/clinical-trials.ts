@@ -188,3 +188,72 @@ export async function searchTrials(input: SearchInput): Promise<Trial[]> {
   trials.sort((a, b) => b.matchScore - a.matchScore);
   return trials;
 }
+
+function mapStudyToTrial(s: any, input?: SearchInput): Trial {
+  const proto = s.protocolSection ?? {};
+  const id = proto.identificationModule ?? {};
+  const desc = proto.descriptionModule ?? {};
+  const cond = proto.conditionsModule ?? {};
+  const elig = proto.eligibilityModule ?? {};
+  const arms = proto.armsInterventionsModule ?? {};
+  const status = proto.statusModule ?? {};
+  const design = proto.designModule ?? {};
+  const contacts = proto.contactsLocationsModule ?? {};
+
+  const locations = ((contacts.locations ?? []) as any[])
+    .filter((l) => (l.country ?? "").toLowerCase() === "india")
+    .map((l) => ({
+      facility: l.facility ?? "",
+      city: l.city ?? "",
+      country: l.country ?? "",
+      status: l.status ?? "",
+      contacts: ((l.contacts ?? []) as any[]).map((c) => ({
+        name: c.name ?? "",
+        phone: c.phone ?? "",
+        email: c.email ?? "",
+      })),
+    }));
+
+  const centralContacts = ((contacts.centralContacts ?? []) as any[]).map((c) => ({
+    name: c.name ?? "",
+    phone: c.phone ?? "",
+    email: c.email ?? "",
+  }));
+  const locationContacts = locations.flatMap((l) => l.contacts);
+  const allContacts = [...centralContacts, ...locationContacts].filter((c) => c.phone || c.email);
+  const seen = new Set<string>();
+  const dedupedContacts = allContacts.filter((c) => {
+    const k = `${c.phone}|${c.email}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+
+  const base = {
+    nctId: id.nctId ?? "",
+    title: id.briefTitle ?? "Untitled trial",
+    briefSummary: desc.briefSummary ?? "",
+    phase: (design.phases ?? []).join(", ") || "N/A",
+    status: status.overallStatus ?? "",
+    conditions: cond.conditions ?? [],
+    interventions: ((arms.interventions ?? []) as any[]).map((i) => i.name ?? "").filter(Boolean),
+    eligibility: elig.eligibilityCriteria ?? "",
+    minAge: parseAgeYears(elig.minimumAge),
+    maxAge: parseAgeYears(elig.maximumAge),
+    sex: elig.sex ?? "ALL",
+    locations,
+    contacts: dedupedContacts,
+    description: desc.briefSummary ?? "",
+  };
+
+  const { score, reasons } = scoreTrial(base, input ?? { condition: "" });
+  return { ...base, matchScore: score, matchReasons: reasons };
+}
+
+export async function fetchTrialById(nctId: string, input?: SearchInput): Promise<Trial | null> {
+  const res = await fetch(`${API}/${encodeURIComponent(nctId)}?format=json`);
+  if (!res.ok) return null;
+  const json = await res.json();
+  if (!json?.protocolSection) return null;
+  return mapStudyToTrial(json, input);
+}
