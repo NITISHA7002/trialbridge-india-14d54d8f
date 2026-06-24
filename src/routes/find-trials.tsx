@@ -1,13 +1,14 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Loader2, Search } from "lucide-react";
-import { searchTrials, type SearchInput, type Trial } from "@/lib/clinical-trials";
+import { searchTrials, fetchTrialById, type SearchInput, type Trial } from "@/lib/clinical-trials";
 import { TrialCard } from "@/components/site/TrialCard";
 
 export const Route = createFileRoute("/find-trials")({
   validateSearch: (s: Record<string, unknown>) => ({
     city: typeof s.city === "string" ? s.city : undefined,
     condition: typeof s.condition === "string" ? s.condition : undefined,
+    nctId: typeof s.nctId === "string" ? s.nctId : undefined,
   }),
   head: () => ({
     meta: [
@@ -36,8 +37,29 @@ function FindTrials() {
     }));
   }, [search.condition, search.city]);
   const [results, setResults] = useState<Trial[] | null>(null);
+  const [focusedTrial, setFocusedTrial] = useState<Trial | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!search.nctId) return;
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    fetchTrialById(search.nctId)
+      .then((t) => {
+        if (!cancelled) setFocusedTrial(t);
+      })
+      .catch(() => {
+        if (!cancelled) setError("Could not load that trial.");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [search.nctId]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,6 +161,13 @@ function FindTrials() {
               <TrialCard key={t.nctId} trial={t} />
             ))}
           </div>
+        </div>
+      )}
+
+      {focusedTrial && !results && (
+        <div className="mt-8 space-y-5">
+          <p className="text-sm text-muted-foreground">Showing trial {focusedTrial.nctId}.</p>
+          <TrialCard trial={focusedTrial} />
         </div>
       )}
     </div>
