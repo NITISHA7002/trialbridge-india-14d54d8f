@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Mail, MapPin, Phone, Share2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Mail, MapPin, Phone, Share2 } from "lucide-react";
 import type { Trial } from "@/lib/clinical-trials";
 import { SimplifiedSummary } from "./SimplifiedSummary";
 import { RegisterInterestModal } from "./RegisterInterestModal";
@@ -13,6 +13,7 @@ function scoreColor(score: number) {
 export function TrialCard({ trial }: { trial: Trial }) {
   const [showElig, setShowElig] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showAllLocations, setShowAllLocations] = useState(false);
 
   const shareText = `Clinical trial in India: ${trial.title} (${trial.nctId}). Learn more: https://clinicaltrials.gov/study/${trial.nctId}`;
   const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
@@ -27,13 +28,60 @@ export function TrialCard({ trial }: { trial: Trial }) {
             <span>NCT ID: {trial.nctId}</span>
           </div>
           {trial.locations.length > 0 && (
-            <div className="text-xs text-muted-foreground flex items-start gap-1">
-              <MapPin className="h-3 w-3 mt-0.5 shrink-0" />
-              <span>
-                {trial.locations
-                  .map((l) => [l.facility, l.city].filter(Boolean).join(" · "))
-                  .join(" • ")}
-              </span>
+            <div className="text-xs text-muted-foreground space-y-1.5">
+              <div className="flex items-start gap-1">
+                <MapPin className="h-3 w-3 mt-0.5 shrink-0" />
+                <span>
+                  {[trial.locations[0].facility, trial.locations[0].city]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </span>
+              </div>
+              {trial.locations.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllLocations((v) => !v)}
+                  className="inline-flex items-center gap-0.5 text-primary font-medium hover:underline"
+                >
+                  <ChevronRight className={`h-3 w-3 transition-transform ${showAllLocations ? "rotate-90" : ""}`} />
+                  {showAllLocations
+                    ? "Hide locations"
+                    : `+${trial.locations.length - 1} more location${trial.locations.length - 1 === 1 ? "" : "s"} →`}
+                </button>
+              )}
+              {showAllLocations && trial.locations.length > 1 && (
+                <ul className="space-y-2 pt-1 pl-1">
+                  {trial.locations.map((l, i) => (
+                    <li key={i} className="border-l-2 border-[color:var(--brand)]/30 pl-2">
+                      <div className="flex items-start gap-1">
+                        <MapPin className="h-3 w-3 mt-0.5 shrink-0" />
+                        <span>
+                          {[l.facility, l.city].filter(Boolean).join(" · ")}
+                          {l.status && ` — ${l.status.replace(/_/g, " ").toLowerCase()}`}
+                        </span>
+                      </div>
+                      {l.contacts.length > 0 && (
+                        <div className="ml-4 mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
+                          {l.contacts.map((c, j) => (
+                            <span key={j} className="flex flex-wrap gap-x-2">
+                              {c.phone && (
+                                <a href={`tel:${c.phone}`} className="text-primary hover:underline inline-flex items-center gap-0.5">
+                                  <Phone className="h-3 w-3" /> {c.phone}
+                                </a>
+                              )}
+                              {c.email && (
+                                <a href={`mailto:${c.email}`} className="text-primary hover:underline inline-flex items-center gap-0.5 break-all">
+                                  <Mail className="h-3 w-3" /> {c.email}
+                                </a>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
         </div>
