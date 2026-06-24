@@ -9,18 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as HospitalsRouteImport } from './routes/hospitals'
 import { Route as FindTrialsRouteImport } from './routes/find-trials'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicSimplifyRouteImport } from './routes/api/public/simplify'
 import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HospitalsRoute = HospitalsRouteImport.update({
+  id: '/hospitals',
+  path: '/hospitals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FindTrialsRoute = FindTrialsRouteImport.update({
@@ -31,6 +50,11 @@ const FindTrialsRoute = FindTrialsRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EligibilityRoute = EligibilityRouteImport.update({
+  id: '/eligibility',
+  path: '/eligibility',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AssistantRoute = AssistantRouteImport.update({
@@ -63,9 +87,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assistant': typeof AssistantRoute
+  '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
+  '/hospitals': typeof HospitalsRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/simplify': typeof ApiPublicSimplifyRoute
 }
@@ -73,9 +101,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assistant': typeof AssistantRoute
+  '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
+  '/hospitals': typeof HospitalsRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/simplify': typeof ApiPublicSimplifyRoute
 }
@@ -84,9 +116,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assistant': typeof AssistantRoute
+  '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
+  '/hospitals': typeof HospitalsRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/api/public/chat': typeof ApiPublicChatRoute
   '/api/public/simplify': typeof ApiPublicSimplifyRoute
 }
@@ -96,9 +132,13 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assistant'
+    | '/eligibility'
     | '/faq'
     | '/find-trials'
+    | '/hospitals'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/api/public/chat'
     | '/api/public/simplify'
   fileRoutesByTo: FileRoutesByTo
@@ -106,9 +146,13 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assistant'
+    | '/eligibility'
     | '/faq'
     | '/find-trials'
+    | '/hospitals'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/api/public/chat'
     | '/api/public/simplify'
   id:
@@ -116,9 +160,13 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assistant'
+    | '/eligibility'
     | '/faq'
     | '/find-trials'
+    | '/hospitals'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/api/public/chat'
     | '/api/public/simplify'
   fileRoutesById: FileRoutesById
@@ -127,20 +175,45 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AssistantRoute: typeof AssistantRoute
+  EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
   FindTrialsRoute: typeof FindTrialsRoute
+  HospitalsRoute: typeof HospitalsRoute
+  PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
   ApiPublicSimplifyRoute: typeof ApiPublicSimplifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hospitals': {
+      id: '/hospitals'
+      path: '/hospitals'
+      fullPath: '/hospitals'
+      preLoaderRoute: typeof HospitalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/find-trials': {
@@ -155,6 +228,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eligibility': {
+      id: '/eligibility'
+      path: '/eligibility'
+      fullPath: '/eligibility'
+      preLoaderRoute: typeof EligibilityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/assistant': {
@@ -199,9 +279,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AssistantRoute: AssistantRoute,
+  EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
   FindTrialsRoute: FindTrialsRoute,
+  HospitalsRoute: HospitalsRoute,
+  PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
   ApiPublicSimplifyRoute: ApiPublicSimplifyRoute,
 }

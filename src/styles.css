@@ -4,6 +4,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Hide Lovable edit badge on published deployments */
+#lovable-badge,
+[data-lovable-badge],
+a[href*="lovable.dev/projects"] {
+  display: none !important;
+}
+
 /*
  * TrialBridge India design system — green medical theme.
  * All semantic tokens defined here; never hardcode colors in components.

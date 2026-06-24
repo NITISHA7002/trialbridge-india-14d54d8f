@@ -19,7 +19,13 @@ export type Trial = {
   minAge: number | null;
   maxAge: number | null;
   sex: string;
-  locations: { facility: string; city: string; country: string }[];
+  locations: {
+    facility: string;
+    city: string;
+    country: string;
+    status: string;
+    contacts: { name: string; phone: string; email: string }[];
+  }[];
   contacts: { name: string; phone: string; email: string }[];
   matchScore: number;
   matchReasons: string[];
@@ -130,6 +136,12 @@ export async function searchTrials(input: SearchInput): Promise<Trial[]> {
         facility: l.facility ?? "",
         city: l.city ?? "",
         country: l.country ?? "",
+        status: l.status ?? "",
+        contacts: ((l.contacts ?? []) as any[]).map((c) => ({
+          name: c.name ?? "",
+          phone: c.phone ?? "",
+          email: c.email ?? "",
+        })),
       }));
 
     const centralContacts = ((contacts.centralContacts ?? []) as any[]).map((c) => ({
