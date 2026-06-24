@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as FindTrialsRouteImport } from './routes/find-trials'
 import { Route as FaqRouteImport } from './routes/faq'
-import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -32,11 +31,6 @@ const FindTrialsRoute = FindTrialsRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AssistantRoute = AssistantRouteImport.update({
@@ -69,7 +63,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assistant': typeof AssistantRoute
-  '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -80,7 +73,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assistant': typeof AssistantRoute
-  '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -92,7 +84,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/assistant': typeof AssistantRoute
-  '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -105,7 +96,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assistant'
-    | '/contact'
     | '/faq'
     | '/find-trials'
     | '/sitemap.xml'
@@ -116,7 +106,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assistant'
-    | '/contact'
     | '/faq'
     | '/find-trials'
     | '/sitemap.xml'
@@ -127,7 +116,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/assistant'
-    | '/contact'
     | '/faq'
     | '/find-trials'
     | '/sitemap.xml'
@@ -139,7 +127,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AssistantRoute: typeof AssistantRoute
-  ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
   FindTrialsRoute: typeof FindTrialsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -168,13 +155,6 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/assistant': {
@@ -219,7 +199,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AssistantRoute: AssistantRoute,
-  ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
   FindTrialsRoute: FindTrialsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -229,13 +208,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
