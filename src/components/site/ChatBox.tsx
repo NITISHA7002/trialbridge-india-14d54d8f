@@ -9,6 +9,20 @@ const GREETING: Msg = {
     "Hello! I am your TrialBridge Assistant. I can explain clinical trials in simple language. Ask me anything — like what does Phase 2 mean, or is joining a trial safe?",
 };
 
+function formatReply(content: string) {
+  // Normalize: ensure each "•" bullet starts on its own line.
+  const normalized = content
+    .replace(/\s*•\s*/g, "\n• ")
+    .replace(/^\n+/, "")
+    .trim();
+  const lines = normalized.split(/\n+/);
+  return lines.map((line, i) => (
+    <p key={i} className={line.startsWith("•") ? "pl-1" : ""}>
+      {line}
+    </p>
+  ));
+}
+
 export function ChatBox() {
   const [messages, setMessages] = useState<Msg[]>([GREETING]);
   const [input, setInput] = useState("");
@@ -61,13 +75,13 @@ export function ChatBox() {
           >
             <div
               className={
-                "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed " +
+                "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed space-y-1.5 " +
                 (m.role === "user"
                   ? "bg-primary text-primary-foreground"
                   : "bg-[color:var(--brand-soft)] text-[color:var(--brand-dark)]")
               }
             >
-              {m.content}
+              {m.role === "assistant" ? formatReply(m.content) : m.content}
             </div>
           </div>
         ))}

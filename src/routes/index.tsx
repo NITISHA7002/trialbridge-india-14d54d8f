@@ -71,7 +71,7 @@ function Home() {
       <section className="bg-[color:var(--brand-soft)]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-14 grid sm:grid-cols-3 gap-8 text-center">
           {[
-            { n: "1000+", l: "Recruiting trials in India" },
+            { n: "500+", l: "Recruiting trials in India" },
             { n: "100%", l: "Free for patients" },
             { n: "Live", l: "Data from ClinicalTrials.gov" },
           ].map((s) => (
