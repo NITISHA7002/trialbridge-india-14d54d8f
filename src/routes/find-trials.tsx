@@ -78,7 +78,9 @@ function FindTrials() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10">
+    <div className="tb-bg-find">
+      {loading && <div className="tb-loadbar" />}
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10">
       <div className="text-center mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--brand-dark)]">Find Trials</h1>
         <p className="mt-2 text-muted-foreground">
@@ -170,6 +172,7 @@ function FindTrials() {
           <TrialCard trial={focusedTrial} />
         </div>
       )}
+      </div>
     </div>
   );
 }
