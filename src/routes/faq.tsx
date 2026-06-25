@@ -40,7 +40,8 @@ const QA = [
 function FaqPage() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12">
+    <div className="tb-bg-faq">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12">
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--brand-dark)]">Frequently Asked Questions</h1>
         <p className="mt-2 text-muted-foreground">Everything a patient needs to know about clinical trials</p>
@@ -64,6 +65,7 @@ function FaqPage() {
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

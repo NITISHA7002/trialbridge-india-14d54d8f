@@ -15,7 +15,8 @@ export const Route = createFileRoute("/assistant")({
 
 function AssistantPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
+    <div className="tb-bg-assistant">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
       <div className="text-center mb-6">
         <h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--brand-dark)]">AI Assistant</h1>
         <p className="mt-2 text-muted-foreground">
@@ -23,6 +24,7 @@ function AssistantPage() {
         </p>
       </div>
       <ChatBox />
+      </div>
     </div>
   );
 }

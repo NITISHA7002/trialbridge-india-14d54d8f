@@ -38,7 +38,9 @@ function EligibilityPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
+    <div className="tb-bg-find">
+      {loading && <div className="tb-loadbar" />}
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
       <div className="text-center mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--brand-dark)]">
           See trials you may qualify for
@@ -116,6 +118,7 @@ function EligibilityPage() {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }
