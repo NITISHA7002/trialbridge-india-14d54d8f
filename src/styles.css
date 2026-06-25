@@ -103,6 +103,19 @@ a[href*="lovable.dev/projects"] {
   --brand-foreground: oklch(0.98 0.01 150);
   --brand-dark: oklch(0.38 0.10 152);     /* darker green for footer headings */
   --brand-soft: oklch(0.975 0.025 155);   /* soft green surface ≈ #f0faf4 */
+  /* Healthcare accent palette */
+  --brand-deep: #1f5e3d;                  /* deeper green for emphasis */
+  --healthcare-blue: #0f4c81;             /* deep healthcare blue */
+  --healthcare-blue-soft: #e6f0fa;
+  --accent-mint: #4ade80;
+  --accent-teal: #14b8a6;
+  --accent-amber: #f59e0b;
+  --surface-grey: #f6f8f7;
+  --shadow-soft: 0 1px 2px rgba(15, 76, 129, 0.04), 0 4px 12px rgba(45, 122, 79, 0.06);
+  --shadow-lift: 0 6px 16px rgba(45, 122, 79, 0.12), 0 12px 32px rgba(15, 76, 129, 0.08);
+  --shadow-glow: 0 0 0 4px rgba(45, 122, 79, 0.12);
+  --gradient-hero: radial-gradient(1200px 500px at 85% -10%, rgba(20, 184, 166, 0.10), transparent 60%), radial-gradient(900px 500px at 0% 100%, rgba(45, 122, 79, 0.08), transparent 60%), linear-gradient(135deg, #ffffff 0%, #f0faf4 100%);
+  --gradient-band: linear-gradient(135deg, #2d7a4f 0%, #1f5e3d 60%, #0f4c81 130%);
 }
 
 .dark {
