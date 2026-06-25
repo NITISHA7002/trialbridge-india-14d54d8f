@@ -4,10 +4,31 @@ import type { Trial } from "@/lib/clinical-trials";
 import { SimplifiedSummary } from "./SimplifiedSummary";
 import { RegisterInterestModal } from "./RegisterInterestModal";
 
-function scoreColor(score: number) {
-  if (score >= 70) return "bg-[color:var(--brand)] text-primary-foreground";
-  if (score >= 40) return "bg-[color:var(--brand-soft)] text-[color:var(--brand-dark)] border border-[color:var(--brand)]/40";
-  return "bg-muted text-muted-foreground";
+function MatchRing({ score }: { score: number }) {
+  const pct = Math.max(0, Math.min(100, score));
+  const r = 22;
+  const c = 2 * Math.PI * r;
+  const offset = c - (pct / 100) * c;
+  return (
+    <div className="text-center shrink-0">
+      <div className="relative h-14 w-14">
+        <svg viewBox="0 0 56 56" className="h-14 w-14 -rotate-90">
+          <circle cx="28" cy="28" r={r} stroke="#e8f5e9" strokeWidth="5" fill="none" />
+          <circle
+            cx="28" cy="28" r={r}
+            stroke="#2d7a4f" strokeWidth="5" fill="none"
+            strokeLinecap="round"
+            strokeDasharray={c}
+            strokeDashoffset={offset}
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center text-sm font-bold" style={{ color: "#2d7a4f" }}>
+          {pct}
+        </div>
+      </div>
+      <div className="text-[10px] text-muted-foreground mt-1">Match</div>
+    </div>
+  );
 }
 
 export function TrialCard({ trial }: { trial: Trial }) {
@@ -19,7 +40,7 @@ export function TrialCard({ trial }: { trial: Trial }) {
   const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
   return (
-    <article className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-4">
+    <article className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-4 tb-trial-card tb-card-hover">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1 min-w-0">
           <h3 className="font-semibold text-[color:var(--brand-dark)] leading-snug">{trial.title}</h3>
@@ -85,12 +106,7 @@ export function TrialCard({ trial }: { trial: Trial }) {
             </div>
           )}
         </div>
-        <div className="text-center shrink-0">
-          <div className={`px-3 py-2 rounded-xl text-sm font-bold ${scoreColor(trial.matchScore)}`}>
-            {trial.matchScore}
-          </div>
-          <div className="text-[10px] text-muted-foreground mt-1">Match Score</div>
-        </div>
+        <MatchRing score={trial.matchScore} />
       </div>
 
       {trial.briefSummary && (
