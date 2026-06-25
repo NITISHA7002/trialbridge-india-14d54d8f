@@ -24,7 +24,8 @@ const HOSPITALS = [
 
 function HospitalsPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10">
+    <div className="tb-bg-hospitals">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10">
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--brand-dark)]">
           Leading Indian Research Institutions
@@ -36,7 +37,7 @@ function HospitalsPage() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {HOSPITALS.map((h) => (
-          <article key={h.name} className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3 flex flex-col">
+          <article key={h.name} className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3 flex flex-col tb-card-hover">
             <div className="h-10 w-10 rounded-lg bg-[color:var(--brand-soft)] flex items-center justify-center text-[color:var(--brand-dark)]">
               <Hospital className="h-5 w-5" />
             </div>
@@ -62,6 +63,7 @@ function HospitalsPage() {
             </div>
           </article>
         ))}
+      </div>
       </div>
     </div>
   );
