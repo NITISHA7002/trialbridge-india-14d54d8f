@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Search, MessageCircle, Hospital, ShieldCheck, Lock, HeartHandshake, Database, Globe2, Activity } from "lucide-react";
+import { Search, Hospital, ShieldCheck, Lock, HeartHandshake, Database, Globe2, Activity, CheckCircle2, ClipboardCheck } from "lucide-react";
 import heroImage from "@/assets/hackthone-photo.webp.asset.json";
 
 
@@ -19,35 +19,47 @@ function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-b from-[color:var(--brand-soft)] to-background">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-20 sm:py-28">
+      <section className="tb-bg-hero">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-24">
           <div className="grid gap-10 items-center lg:grid-cols-2">
-            <div className="text-center">
-              <span className="inline-block rounded-full bg-[color:var(--brand)]/10 text-[color:var(--brand-dark)] text-xs font-medium px-3 py-1 mb-6">
-                For patients across India · Always free
+            <div className="text-center lg:text-left">
+              <span className="inline-block rounded-full bg-[#e8f5e9] text-[#2d7a4f] text-xs font-semibold px-3 py-1 mb-6">
+                Trusted patient platform for India
               </span>
-              <h1 className="text-3xl sm:text-5xl font-bold text-[color:var(--brand-dark)] leading-tight">
-                Find clinical trials in India,<br className="hidden sm:block" /> explained in simple language.
+              <h1 className="tb-hero-title font-bold text-black tracking-tight">
+                Helping every patient discover new treatment opportunities
               </h1>
-              <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-                TrialBridge connects Indian patients with recruiting clinical trials from
-                ClinicalTrials.gov, and rewrites the complex medical text into plain English you
-                can actually understand.
+              <p className="mt-5 text-base sm:text-lg text-muted-foreground max-w-2xl">
+                Find clinical trials from trusted hospitals, understand eligibility in simple language, and connect with right opportunities in minutes.
               </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <div className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-3">
                 <Link
                   to="/find-trials"
-                  className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                  className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-white tb-btn-glow"
+                  style={{ backgroundColor: "#2d7a4f" }}
                 >
-                  <Search className="h-4 w-4" /> Find a Trial
+                  <Search className="h-4 w-4" /> Find matching trials
                 </Link>
                 <Link
-                  to="/assistant"
-                  className="inline-flex items-center gap-2 rounded-md border border-[color:var(--brand)] text-[color:var(--brand-dark)] px-5 py-3 text-sm font-semibold hover:bg-[color:var(--brand-soft)]"
+                  to="/eligibility"
+                  className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold"
+                  style={{ color: "#2d7a4f", border: "2px solid #2d7a4f" }}
                 >
-                  <MessageCircle className="h-4 w-4" /> Ask the AI Assistant
+                  <ClipboardCheck className="h-4 w-4" /> Check my eligibility
                 </Link>
               </div>
+              <ul className="mt-8 flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 text-sm text-foreground/80">
+                {[
+                  "Real ClinicalTrials.gov Data",
+                  "AI-Powered Simplification",
+                  "Patient-Friendly Language",
+                  "Trusted Research Institutions",
+                ].map((t) => (
+                  <li key={t} className="inline-flex items-center gap-1.5">
+                    <CheckCircle2 className="h-4 w-4" style={{ color: "#2d7a4f" }} /> {t}
+                  </li>
+                ))}
+              </ul>
             </div>
             <div className="flex justify-center lg:justify-end">
               <img
@@ -58,6 +70,10 @@ function Home() {
             </div>
           </div>
         </div>
+        {/* Wave divider */}
+        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="block w-full h-10" aria-hidden="true">
+          <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#e8f5e9" />
+        </svg>
       </section>
 
 
@@ -70,7 +86,7 @@ function Home() {
             { icon: ShieldCheck, title: "2. Match", body: "Each trial gets a match score out of 100 based on age, gender, condition, and location." },
             { icon: Hospital, title: "3. Connect", body: "Read a simple, patient-friendly summary, then register interest with the hospital." },
           ].map(({ icon: Icon, title, body }) => (
-            <div key={title} className="rounded-2xl border border-border bg-card p-6 text-center">
+            <div key={title} className="rounded-2xl border border-border bg-card p-6 text-center tb-card-hover">
               <div className="mx-auto h-12 w-12 rounded-xl bg-[color:var(--brand-soft)] flex items-center justify-center text-[color:var(--brand-dark)]">
                 <Icon className="h-5 w-5" />
               </div>
@@ -109,7 +125,7 @@ function Home() {
             { icon: HeartHandshake, title: "Built for patients", body: "Free forever. Plain-English summaries created for Indian patients with no medical background." },
             { icon: Database, title: "Always up to date", body: "Results are fetched live every time you search — no stale or outdated listings." },
           ].map(({ icon: Icon, title, body }) => (
-            <div key={title} className="rounded-2xl border border-border bg-card p-5">
+            <div key={title} className="rounded-2xl border border-border bg-card p-5 tb-card-hover">
               <div className="h-10 w-10 rounded-lg bg-[color:var(--brand-soft)] flex items-center justify-center text-[color:var(--brand-dark)]">
                 <Icon className="h-5 w-5" />
               </div>
