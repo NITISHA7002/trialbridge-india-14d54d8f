@@ -16,7 +16,7 @@ const NAV = [
 export function Navbar() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="fixed top-0 inset-x-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
+    <header className="fixed top-0 inset-x-0 z-50 tb-navbar bg-background/90 backdrop-blur-md">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
@@ -29,8 +29,8 @@ export function Navbar() {
                 to={item.to}
                 activeOptions={{ exact: item.to === "/" }}
                 activeProps={{ className: "text-primary bg-[color:var(--brand-soft)]" }}
-                inactiveProps={{ className: "text-foreground/80 hover:text-primary hover:bg-[color:var(--brand-soft)]" }}
-                className="px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                inactiveProps={{ className: "text-foreground/80 hover:bg-[color:var(--brand-soft)]" }}
+                className="px-3 py-2 rounded-md text-sm font-medium tb-nav-link"
               >
                 {item.label}
               </Link>
@@ -55,7 +55,7 @@ export function Navbar() {
                 activeOptions={{ exact: item.to === "/" }}
                 activeProps={{ className: "text-primary bg-[color:var(--brand-soft)]" }}
                 inactiveProps={{ className: "text-foreground/80 hover:bg-[color:var(--brand-soft)]" }}
-                className="px-3 py-2 rounded-md text-sm font-medium"
+                className="px-3 py-2 rounded-md text-sm font-medium tb-nav-link"
               >
                 {item.label}
               </Link>
