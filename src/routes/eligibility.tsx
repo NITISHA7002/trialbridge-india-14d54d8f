@@ -89,7 +89,7 @@ function EligibilityPage() {
         <button
           type="submit"
           disabled={loading || !form.condition.trim()}
-          className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-[color:var(--brand-dark)] px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+          className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-[color:var(--brand-dark)] px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50 tb-btn-glow"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {loading ? "Checking..." : "Check eligibility"}
@@ -133,7 +133,7 @@ function EligibilityCard({ trial, input }: { trial: Trial; input: SearchInput })
     trial.matchReasons.includes("Gender eligible");
 
   return (
-    <article className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3">
+    <article className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3 tb-card-hover">
       <div className="flex items-start justify-between gap-3">
         <Link
           to="/find-trials"
