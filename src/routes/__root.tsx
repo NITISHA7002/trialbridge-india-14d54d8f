@@ -79,14 +79,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "TrialBridge india" },
+      { name: "description", content: "TrialBridge AI Helper simplifies clinical trial discovery for Indian patients with AI-powered summaries and chat." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "TrialBridge india" },
+      { property: "og:description", content: "TrialBridge AI Helper simplifies clinical trial discovery for Indian patients with AI-powered summaries and chat." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "TrialBridge india" },
+      { name: "twitter:description", content: "TrialBridge AI Helper simplifies clinical trial discovery for Indian patients with AI-powered summaries and chat." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/551b1971-e1d1-4214-bb9c-a57c02cd8328/id-preview-abb65b70--ebb63b2a-b53c-4ce2-b3aa-17f63cbdab42.lovable.app-1782380406547.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/551b1971-e1d1-4214-bb9c-a57c02cd8328/id-preview-abb65b70--ebb63b2a-b53c-4ce2-b3aa-17f63cbdab42.lovable.app-1782380406547.png" },
     ],
     links: [
       {
