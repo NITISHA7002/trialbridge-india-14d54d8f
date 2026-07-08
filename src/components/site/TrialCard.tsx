@@ -36,7 +36,7 @@ export function TrialCard({ trial }: { trial: Trial }) {
   const [showRegister, setShowRegister] = useState(false);
   const [showAllLocations, setShowAllLocations] = useState(false);
 
-  const shareText = `Clinical trial in India: ${trial.title} (${trial.nctId}). Learn more: https://clinicaltrials.gov/study/${trial.nctId}`;
+  const shareText = `Clinical trial in India: ${trial.title} (${trial.nctId}). Learn more: https://trialbridge-india.lovable.app/find-trials?nctId=${trial.nctId}`;
   const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
   return (
