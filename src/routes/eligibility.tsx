@@ -137,7 +137,12 @@ function EligibilityCard({ trial, input }: { trial: Trial; input: SearchInput })
       <div className="flex items-start justify-between gap-3">
         <Link
           to="/find-trials"
-          search={{ nctId: trial.nctId }}
+          search={{
+            nctId: trial.nctId,
+            condition: input.condition,
+            age: input.age ?? undefined,
+            gender: input.gender || undefined,
+          }}
           className="font-semibold text-[color:var(--brand-dark)] hover:underline leading-snug"
         >
           {trial.title}
@@ -162,7 +167,12 @@ function EligibilityCard({ trial, input }: { trial: Trial; input: SearchInput })
 
       <Link
         to="/find-trials"
-        search={{ nctId: trial.nctId }}
+        search={{
+          nctId: trial.nctId,
+          condition: input.condition,
+          age: input.age ?? undefined,
+          gender: input.gender || undefined,
+        }}
         className="inline-flex items-center rounded-md border border-[color:var(--brand)] text-[color:var(--brand-dark)] px-3 py-1.5 text-sm font-medium hover:bg-[color:var(--brand-soft)]"
       >
         View details

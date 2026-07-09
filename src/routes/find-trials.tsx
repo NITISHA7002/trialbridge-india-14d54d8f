@@ -9,6 +9,11 @@ export const Route = createFileRoute("/find-trials")({
     city: typeof s.city === "string" ? s.city : undefined,
     condition: typeof s.condition === "string" ? s.condition : undefined,
     nctId: typeof s.nctId === "string" ? s.nctId : undefined,
+    age: typeof s.age === "number" ? s.age : typeof s.age === "string" && s.age ? Number(s.age) : undefined,
+    gender:
+      s.gender === "Male" || s.gender === "Female" || s.gender === "All"
+        ? s.gender
+        : undefined,
   }),
   head: () => ({
     meta: [
@@ -25,8 +30,8 @@ function FindTrials() {
   const search = useSearch({ from: "/find-trials" });
   const [form, setForm] = useState<SearchInput>({
     condition: search.condition ?? "",
-    age: null,
-    gender: "",
+    age: search.age ?? null,
+    gender: search.gender ?? "",
     city: search.city ?? "",
   });
   useEffect(() => {
@@ -34,8 +39,10 @@ function FindTrials() {
       ...f,
       condition: search.condition ?? f.condition,
       city: search.city ?? f.city,
+      age: search.age ?? f.age,
+      gender: search.gender ?? f.gender,
     }));
-  }, [search.condition, search.city]);
+  }, [search.condition, search.city, search.age, search.gender]);
   const [results, setResults] = useState<Trial[] | null>(null);
   const [focusedTrial, setFocusedTrial] = useState<Trial | null>(null);
   const [loading, setLoading] = useState(false);
@@ -46,7 +53,12 @@ function FindTrials() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetchTrialById(search.nctId)
+    fetchTrialById(search.nctId, {
+      condition: search.condition ?? "",
+      age: search.age ?? null,
+      gender: search.gender ?? "",
+      city: search.city ?? "",
+    })
       .then((t) => {
         if (!cancelled) setFocusedTrial(t);
       })
@@ -59,7 +71,7 @@ function FindTrials() {
     return () => {
       cancelled = true;
     };
-  }, [search.nctId]);
+  }, [search.nctId, search.condition, search.age, search.gender, search.city]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
