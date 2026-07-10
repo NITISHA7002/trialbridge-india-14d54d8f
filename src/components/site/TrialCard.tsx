@@ -31,7 +31,7 @@ function MatchRing({ score }: { score: number }) {
   );
 }
 
-export function TrialCard({ trial }: { trial: Trial }) {
+export function TrialCard({ trial, hideMatchScore = false }: { trial: Trial; hideMatchScore?: boolean }) {
   const [showElig, setShowElig] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showAllLocations, setShowAllLocations] = useState(false);
@@ -106,8 +106,26 @@ export function TrialCard({ trial }: { trial: Trial }) {
             </div>
           )}
         </div>
-        <MatchRing score={trial.matchScore} />
+        {hideMatchScore ? (
+          <div className="shrink-0 max-w-[180px] text-right">
+            <span className="inline-block text-[11px] font-medium bg-[color:var(--brand-soft)] text-[color:var(--brand-dark)] rounded-full px-2.5 py-1">
+              Shared trial · view details below
+            </span>
+          </div>
+        ) : (
+          <MatchRing score={trial.matchScore} />
+        )}
       </div>
+
+      {hideMatchScore && (
+        <div className="rounded-md border border-dashed border-[color:var(--brand)]/40 bg-[color:var(--brand-soft)]/40 p-3 text-xs text-[color:var(--brand-dark)]">
+          No personal match score is shown for shared links.{" "}
+          <a href="/find-trials" className="font-medium underline hover:no-underline">
+            Search with your details
+          </a>{" "}
+          for a personalized match score.
+        </div>
+      )}
 
       {trial.briefSummary && (
         <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">{trial.briefSummary}</p>
