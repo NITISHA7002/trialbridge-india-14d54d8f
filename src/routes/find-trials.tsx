@@ -181,7 +181,12 @@ function FindTrials() {
       {focusedTrial && !results && (
         <div className="mt-8 space-y-5">
           <p className="text-sm text-muted-foreground">Showing trial {focusedTrial.nctId}.</p>
-          <TrialCard trial={focusedTrial} />
+          <TrialCard
+            trial={focusedTrial}
+            hideMatchScore={
+              !search.condition && !search.city && search.age == null && !search.gender
+            }
+          />
         </div>
       )}
       </div>
