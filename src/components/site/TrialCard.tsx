@@ -109,7 +109,7 @@ export function TrialCard({ trial, hideMatchScore = false }: { trial: Trial; hid
         {hideMatchScore ? (
           <div className="shrink-0 max-w-[180px] text-right">
             <span className="inline-block text-[11px] font-medium bg-[color:var(--brand-soft)] text-[color:var(--brand-dark)] rounded-full px-2.5 py-1">
-              Shared trial · view details below
+              View trial details below
             </span>
           </div>
         ) : (

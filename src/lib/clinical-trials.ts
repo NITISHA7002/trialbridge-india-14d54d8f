@@ -240,7 +240,10 @@ function mapStudyToTrial(s: any, input?: SearchInput): Trial {
     description: desc.briefSummary ?? "",
   };
 
-  const { score, reasons } = scoreTrial(base, input ?? { condition: "" });
+  const shouldScore = input && input.condition.trim().length > 0;
+  const { score, reasons } = shouldScore
+    ? scoreTrial(base, input)
+    : { score: 0, reasons: [] };
   return { ...base, matchScore: score, matchReasons: reasons };
 }
 
