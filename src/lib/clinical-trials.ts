@@ -75,8 +75,6 @@ function scoreTrial(t: Omit<Trial, "matchScore" | "matchReasons">, input: Search
       score += 25;
       reasons.push("Age eligible");
     }
-  } else {
-    score += 10;
   }
 
   // Gender match: 15
@@ -86,8 +84,6 @@ function scoreTrial(t: Omit<Trial, "matchScore" | "matchReasons">, input: Search
       score += 15;
       reasons.push("Gender eligible");
     }
-  } else {
-    score += 10;
   }
 
   // City match: 20
@@ -98,8 +94,6 @@ function scoreTrial(t: Omit<Trial, "matchScore" | "matchReasons">, input: Search
       score += 20;
       reasons.push("Hospital in your city");
     }
-  } else {
-    score += 10;
   }
 
   return { score: Math.min(100, score), reasons };
