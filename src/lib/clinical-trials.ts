@@ -46,7 +46,7 @@ function parseAgeYears(text: string | undefined): number | null {
   return 0;
 }
 
-function scoreTrial(t: Omit<Trial, "matchScore" | "matchReasons">, input: SearchInput) {
+export function scoreTrial(t: Omit<Trial, "matchScore" | "matchReasons">, input: SearchInput) {
   let score = 0;
   const reasons: string[] = [];
   const q = input.condition.trim().toLowerCase();

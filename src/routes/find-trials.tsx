@@ -53,18 +53,10 @@ function FindTrials() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    const hasSearchContext = Boolean(search.condition);
-    fetchTrialById(
-      search.nctId,
-      hasSearchContext
-        ? {
-            condition: search.condition ?? "",
-            age: search.age ?? null,
-            gender: search.gender ?? "",
-            city: search.city ?? "",
-          }
-        : undefined,
-    )
+    // Shared link: never inherit scoring context from URL params — the person
+    // viewing the trial didn't enter that info. They can run the inline
+    // fit-checker on the card instead.
+    fetchTrialById(search.nctId)
       .then((t) => {
         if (!cancelled) setFocusedTrial(t);
       })
@@ -187,7 +179,7 @@ function FindTrials() {
       {focusedTrial && !results && (
         <div className="mt-8 space-y-5">
           <p className="text-sm text-muted-foreground">Showing trial {focusedTrial.nctId}.</p>
-          <TrialCard trial={focusedTrial} hideMatchScore={!search.condition} />
+          <TrialCard trial={focusedTrial} hideMatchScore sharedLink />
         </div>
       )}
       </div>
