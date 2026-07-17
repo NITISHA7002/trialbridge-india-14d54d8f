@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle2, ChevronDown, ChevronRight, Loader2, Mail, MapPin, Phone, Share2, Sparkles } from "lucide-react";
 import { scoreTrial, type SearchInput, type Trial } from "@/lib/clinical-trials";
 import { SimplifiedSummary } from "./SimplifiedSummary";
@@ -49,6 +49,29 @@ export function TrialCard({
     reasons: string[];
     input: SearchInput;
   } | null>(null);
+  const [fitFromSession, setFitFromSession] = useState(false);
+
+  useEffect(() => {
+    if (!sharedLink || fitResult) return;
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.sessionStorage.getItem("tb-fit-input");
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as Partial<SearchInput>;
+      if (!parsed?.condition || !String(parsed.condition).trim()) return;
+      const input: SearchInput = {
+        condition: String(parsed.condition),
+        age: parsed.age ?? null,
+        gender: (parsed.gender as SearchInput["gender"]) ?? "",
+        city: "",
+      };
+      const { score, reasons } = scoreTrial(trial, input);
+      setFitResult({ score, reasons, input });
+      setFitFromSession(true);
+    } catch {
+      // ignore
+    }
+  }, [sharedLink, trial, fitResult]);
 
   const shareText = `Clinical trial in India: ${trial.title} (${trial.nctId}). Learn more: https://trialbridge-india.lovable.app/find-trials?nctId=${trial.nctId}`;
   const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
@@ -145,7 +168,16 @@ export function TrialCard({
       </div>
 
       {sharedLink && fitResult && (
-        <FitResultPanel trial={trial} result={fitResult} onReset={() => setFitResult(null)} />
+        <FitResultPanel
+          trial={trial}
+          result={fitResult}
+          onReset={() => {
+            setFitResult(null);
+            setFitFromSession(false);
+          }}
+          fromSession={fitFromSession}
+          onChangeDetails={() => setShowFitChecker(true)}
+        />
       )}
       {sharedLink && !fitResult && (
         <div className="rounded-md border border-dashed border-[color:var(--brand)]/40 bg-[color:var(--brand-soft)]/40 p-3 text-xs text-[color:var(--brand-dark)]">
@@ -242,6 +274,17 @@ export function TrialCard({
           onResult={(r) => {
             setFitResult(r);
             setShowFitChecker(false);
+            setFitFromSession(false);
+            if (typeof window !== "undefined") {
+              try {
+                window.sessionStorage.setItem(
+                  "tb-fit-input",
+                  JSON.stringify({ condition: r.input.condition, age: r.input.age, gender: r.input.gender }),
+                );
+              } catch {
+                // ignore
+              }
+            }
           }}
         />
       )}
@@ -353,14 +396,18 @@ function FitCheckerModal({
   );
 }
 
-function FitResultPanel({
+export function FitResultPanel({
   trial,
   result,
   onReset,
+  fromSession = false,
+  onChangeDetails,
 }: {
   trial: Trial;
   result: { score: number; reasons: string[]; input: SearchInput };
-  onReset: () => void;
+  onReset?: () => void;
+  fromSession?: boolean;
+  onChangeDetails?: () => void;
 }) {
   const { input, reasons } = result;
 
@@ -391,23 +438,60 @@ function FitResultPanel({
     ? `Your condition "${input.condition}" matches this trial.`
     : `"${input.condition}" doesn't appear to match this trial's condition.`;
 
+  const matchedCount = [conditionOn, ageOn, genderOn].filter(Boolean).length;
+  const allProvided = conditionOn !== undefined && ageProvided && genderProvided;
+  const verdict = (() => {
+    if (allProvided && matchedCount === 3) {
+      return "Good news — you match this trial's condition, age, and gender requirements.";
+    }
+    if (conditionOn && matchedCount >= 2) {
+      return "You match on condition, but not every criterion — worth a closer look.";
+    }
+    if (conditionOn) {
+      return "You match on condition, but not every criterion — worth a closer look.";
+    }
+    return "This trial's core requirements don't line up with what you entered — but eligibility criteria can have exceptions.";
+  })();
+  const nextStep =
+    matchedCount >= 2
+      ? "Call or email the trial contact below to ask about enrollment."
+      : "Eligibility criteria can have exceptions — please contact the trial coordinator directly to confirm before ruling it out.";
+
   return (
     <div className="rounded-2xl border border-[color:var(--brand)]/30 bg-[color:var(--brand-soft)]/40 p-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+      {fromSession && (
+        <div className="text-xs text-muted-foreground">
+          Using the details you entered on the Eligibility Checker.{" "}
+          {onChangeDetails && (
+            <button
+              type="button"
+              onClick={onChangeDetails}
+              className="text-primary hover:underline"
+            >
+              Not you? Check again
+            </button>
+          )}
+        </div>
+      )}
       <div className="flex items-center justify-between gap-3">
         <h4 className="text-sm font-semibold text-[color:var(--brand-dark)]">Your personalized fit</h4>
-        <button
-          type="button"
-          onClick={onReset}
-          className="text-xs text-primary hover:underline"
-        >
-          Reset
-        </button>
+        {onReset && (
+          <button
+            type="button"
+            onClick={onReset}
+            className="text-xs text-primary hover:underline"
+          >
+            Reset
+          </button>
+        )}
       </div>
+      <p className="text-sm text-[color:var(--brand-dark)]">{verdict}</p>
       <ul className="space-y-1.5 text-xs text-[color:var(--brand-dark)]">
         <FitRow label="Condition match" on={conditionOn} reason={conditionReason} />
         <FitRow label="Age match" on={ageOn} dimmed={!ageProvided} reason={ageReason} />
         <FitRow label="Gender match" on={genderOn} dimmed={!genderProvided} reason={genderReason} />
       </ul>
+      <p className="text-xs text-muted-foreground">{nextStep}</p>
     </div>
   );
 }
