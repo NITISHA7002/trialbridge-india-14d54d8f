@@ -360,6 +360,7 @@ function FitResultPanel({
 }: {
   trial: Trial;
   result: { score: number; reasons: string[]; input: SearchInput };
+  onReset: () => void;
 }) {
   const { input, reasons } = result;
 
