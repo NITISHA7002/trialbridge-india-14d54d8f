@@ -439,13 +439,9 @@ export function FitResultPanel({
     : `"${input.condition}" doesn't appear to match this trial's condition.`;
 
   const matchedCount = [conditionOn, ageOn, genderOn].filter(Boolean).length;
-  const allProvided = conditionOn !== undefined && ageProvided && genderProvided;
   const verdict = (() => {
-    if (allProvided && matchedCount === 3) {
+    if (conditionOn && ageProvided && genderProvided && ageOn && genderOn) {
       return "Good news — you match this trial's condition, age, and gender requirements.";
-    }
-    if (conditionOn && matchedCount >= 2) {
-      return "You match on condition, but not every criterion — worth a closer look.";
     }
     if (conditionOn) {
       return "You match on condition, but not every criterion — worth a closer look.";
