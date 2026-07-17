@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Mail, MapPin, Phone, Share2 } from "lucide-react";
-import type { Trial } from "@/lib/clinical-trials";
+import { CheckCircle2, ChevronDown, ChevronRight, Loader2, Mail, MapPin, Phone, Share2, Sparkles } from "lucide-react";
+import { scoreTrial, type SearchInput, type Trial } from "@/lib/clinical-trials";
 import { SimplifiedSummary } from "./SimplifiedSummary";
 import { RegisterInterestModal } from "./RegisterInterestModal";
 
@@ -31,10 +31,24 @@ function MatchRing({ score }: { score: number }) {
   );
 }
 
-export function TrialCard({ trial, hideMatchScore = false }: { trial: Trial; hideMatchScore?: boolean }) {
+export function TrialCard({
+  trial,
+  hideMatchScore = false,
+  sharedLink = false,
+}: {
+  trial: Trial;
+  hideMatchScore?: boolean;
+  sharedLink?: boolean;
+}) {
   const [showElig, setShowElig] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showAllLocations, setShowAllLocations] = useState(false);
+  const [showFitChecker, setShowFitChecker] = useState(false);
+  const [fitResult, setFitResult] = useState<{
+    score: number;
+    reasons: string[];
+    input: SearchInput;
+  } | null>(null);
 
   const shareText = `Clinical trial in India: ${trial.title} (${trial.nctId}). Learn more: https://trialbridge-india.lovable.app/find-trials?nctId=${trial.nctId}`;
   const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
@@ -106,7 +120,20 @@ export function TrialCard({ trial, hideMatchScore = false }: { trial: Trial; hid
             </div>
           )}
         </div>
-        {hideMatchScore ? (
+        {sharedLink ? (
+          fitResult ? (
+            <MatchRing score={fitResult.score} />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowFitChecker(true)}
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[color:var(--brand-dark)] px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 shadow-sm tb-btn-glow"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              Check if this trial fits you
+            </button>
+          )
+        ) : hideMatchScore ? (
           <div className="shrink-0 max-w-[180px] text-right">
             <span className="inline-block text-[11px] font-medium bg-[color:var(--brand-soft)] text-[color:var(--brand-dark)] rounded-full px-2.5 py-1">
               View trial details below
@@ -117,13 +144,12 @@ export function TrialCard({ trial, hideMatchScore = false }: { trial: Trial; hid
         )}
       </div>
 
-      {hideMatchScore && (
+      {sharedLink && fitResult && (
+        <FitResultPanel trial={trial} result={fitResult} onReset={() => setFitResult(null)} />
+      )}
+      {sharedLink && !fitResult && (
         <div className="rounded-md border border-dashed border-[color:var(--brand)]/40 bg-[color:var(--brand-soft)]/40 p-3 text-xs text-[color:var(--brand-dark)]">
-          No personal match score is shown for shared links.{" "}
-          <a href="/find-trials" className="font-medium underline hover:no-underline">
-            Search with your details
-          </a>{" "}
-          for a personalized match score.
+          Opened from a shared link. Tap <span className="font-semibold">Check if this trial fits you</span> to see a personalized match — nothing is submitted or saved.
         </div>
       )}
 
@@ -209,6 +235,202 @@ export function TrialCard({ trial, hideMatchScore = false }: { trial: Trial; hid
       {showRegister && (
         <RegisterInterestModal trial={trial} onClose={() => setShowRegister(false)} />
       )}
+      {showFitChecker && (
+        <FitCheckerModal
+          trial={trial}
+          onClose={() => setShowFitChecker(false)}
+          onResult={(r) => {
+            setFitResult(r);
+            setShowFitChecker(false);
+          }}
+        />
+      )}
     </article>
+  );
+}
+
+function FitCheckerModal({
+  trial,
+  onClose,
+  onResult,
+}: {
+  trial: Trial;
+  onClose: () => void;
+  onResult: (r: { score: number; reasons: string[]; input: SearchInput }) => void;
+}) {
+  const suggested = trial.conditions[0] ?? "";
+  const [condition, setCondition] = useState("");
+  const [age, setAge] = useState<string>("");
+  const [gender, setGender] = useState<"" | "Male" | "Female">("");
+  const [submitting, setSubmitting] = useState(false);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 animate-in fade-in duration-150"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl bg-card p-6 shadow-xl animate-in fade-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className="text-lg font-semibold text-[color:var(--brand-dark)]">
+          Let's check your fit for this trial
+        </h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Quick, private, and not saved anywhere.
+        </p>
+        <form
+          className="mt-4 space-y-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!condition.trim()) return;
+            setSubmitting(true);
+            const input: SearchInput = {
+              condition: condition.trim(),
+              age: age ? Number(age) : null,
+              gender: gender || "",
+              city: "",
+            };
+            const { score, reasons } = scoreTrial(trial, input);
+            // small delay so the reveal feels intentional
+            setTimeout(() => onResult({ score, reasons, input }), 150);
+          }}
+        >
+          <div>
+            <label className="text-sm font-medium">Condition</label>
+            <input
+              required
+              placeholder={suggested ? `e.g. ${suggested}` : "e.g. breast cancer"}
+              value={condition}
+              onChange={(e) => setCondition(e.target.value)}
+              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-sm font-medium">Age</label>
+              <input
+                type="number"
+                min={0}
+                max={120}
+                placeholder="optional"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Gender</label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value as "" | "Male" | "Female")}
+                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="">Any</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+          </div>
+          <button
+            type="submit"
+            disabled={submitting || !condition.trim()}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-[color:var(--brand-dark)] px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
+          >
+            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            See my match
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full rounded-md px-4 py-1 text-xs text-muted-foreground hover:underline"
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function FitResultPanel({
+  trial,
+  result,
+  onReset,
+}: {
+  trial: Trial;
+  result: { score: number; reasons: string[]; input: SearchInput };
+}) {
+  const { input, reasons } = result;
+
+  const conditionOn = reasons.some((r) => r.toLowerCase().includes("condition"));
+  const ageProvided = input.age != null;
+  const ageOn = ageProvided && reasons.includes("Age eligible");
+  const genderProvided = Boolean(input.gender) && input.gender !== "All";
+  const genderOn = genderProvided && reasons.includes("Gender eligible");
+
+  const ageReason = (() => {
+    if (!ageProvided) return "Add your age in the checker to include this factor.";
+    if (ageOn) return "You fall within the trial's age range.";
+    const min = trial.minAge;
+    const max = trial.maxAge;
+    if (min != null && max != null) return `Trial requires ${min} to ${max} years, you entered ${input.age}.`;
+    if (min != null) return `Trial requires ${min}+ years, you entered ${input.age}.`;
+    if (max != null) return `Trial requires up to ${max} years, you entered ${input.age}.`;
+    return "Age criteria not published for this trial.";
+  })();
+
+  const genderReason = (() => {
+    if (!genderProvided) return "Add your gender in the checker to include this factor.";
+    if (genderOn) return "Trial is open to your gender.";
+    return `Trial recruits ${trial.sex.toLowerCase()} participants only.`;
+  })();
+
+  const conditionReason = conditionOn
+    ? `Your condition "${input.condition}" matches this trial.`
+    : `"${input.condition}" doesn't appear to match this trial's condition.`;
+
+  return (
+    <div className="rounded-2xl border border-[color:var(--brand)]/30 bg-[color:var(--brand-soft)]/40 p-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+      <div className="flex items-center justify-between gap-3">
+        <h4 className="text-sm font-semibold text-[color:var(--brand-dark)]">Your personalized fit</h4>
+        <button
+          type="button"
+          onClick={onReset}
+          className="text-xs text-primary hover:underline"
+        >
+          Reset
+        </button>
+      </div>
+      <ul className="space-y-1.5 text-xs text-[color:var(--brand-dark)]">
+        <FitRow label="Condition match" on={conditionOn} reason={conditionReason} />
+        <FitRow label="Age match" on={ageOn} dimmed={!ageProvided} reason={ageReason} />
+        <FitRow label="Gender match" on={genderOn} dimmed={!genderProvided} reason={genderReason} />
+      </ul>
+    </div>
+  );
+}
+
+function FitRow({
+  label,
+  on,
+  dimmed = false,
+  reason,
+}: {
+  label: string;
+  on: boolean;
+  dimmed?: boolean;
+  reason: string;
+}) {
+  return (
+    <li className={`flex items-start gap-2 ${dimmed && !on ? "opacity-50" : ""}`}>
+      <CheckCircle2
+        className={`h-4 w-4 mt-0.5 shrink-0 ${on ? "text-[color:var(--brand-dark)]" : "text-muted-foreground/60"}`}
+      />
+      <div>
+        <span className="font-medium">{label}</span>
+        <span className="text-muted-foreground"> — {reason}</span>
+      </div>
+    </li>
   );
 }
