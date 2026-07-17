@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { searchTrials, type SearchInput, type Trial } from "@/lib/clinical-trials";
+import { FitResultPanel } from "@/components/site/TrialCard";
 
 export const Route = createFileRoute("/eligibility")({
   head: () => ({
@@ -27,6 +28,16 @@ function EligibilityPage() {
     setLoading(true);
     setError(null);
     setResults(null);
+    if (typeof window !== "undefined") {
+      try {
+        window.sessionStorage.setItem(
+          "tb-fit-input",
+          JSON.stringify({ condition: form.condition, age: form.age, gender: form.gender }),
+        );
+      } catch {
+        // ignore
+      }
+    }
     try {
       const trials = await searchTrials(form);
       setResults(trials.filter((t) => t.matchScore >= 50));
@@ -125,12 +136,6 @@ function EligibilityPage() {
 
 function EligibilityCard({ trial, input }: { trial: Trial; input: SearchInput }) {
   const isLikely = trial.matchScore >= 70;
-  const conditionMatch = trial.matchReasons.some((r) => r.toLowerCase().includes("condition"));
-  const ageMatch = input.age == null || trial.matchReasons.includes("Age eligible");
-  const genderMatch =
-    !input.gender ||
-    input.gender === "All" ||
-    trial.matchReasons.includes("Gender eligible");
 
   return (
     <article className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-3 tb-card-hover">
@@ -158,12 +163,10 @@ function EligibilityCard({ trial, input }: { trial: Trial; input: SearchInput })
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[color:var(--brand-dark)]">
-        <Check label="Condition match" on={conditionMatch} />
-        <Check label="Age match" on={ageMatch} />
-        <Check label="Gender match" on={genderMatch} />
-        <Check label="Recruiting" on />
-      </div>
+      <FitResultPanel
+        trial={trial}
+        result={{ score: trial.matchScore, reasons: trial.matchReasons, input }}
+      />
 
       <Link
         to="/find-trials"
@@ -178,13 +181,5 @@ function EligibilityCard({ trial, input }: { trial: Trial; input: SearchInput })
         View details
       </Link>
     </article>
-  );
-}
-
-function Check({ label, on }: { label: string; on: boolean }) {
-  return (
-    <span className={`inline-flex items-center gap-1 ${on ? "" : "opacity-40"}`}>
-      <CheckCircle2 className="h-3.5 w-3.5" /> {label}
-    </span>
   );
 }
