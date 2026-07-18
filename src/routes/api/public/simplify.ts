@@ -5,6 +5,7 @@ type Body = {
   description?: string;
   eligibility?: string;
   intervention?: string;
+  language?: "English" | "Hindi";
 };
 
 const MODEL = "google/gemini-2.5-flash";
@@ -18,7 +19,18 @@ export const Route = createFileRoute("/api/public/simplify")({
           return Response.json({ error: "Server not configured" }, { status: 500 });
         }
         const body = (await request.json().catch(() => ({}))) as Body;
-        const { title = "", description = "", eligibility = "", intervention = "" } = body;
+        const {
+          title = "",
+          description = "",
+          eligibility = "",
+          intervention = "",
+          language = "English",
+        } = body;
+
+        const hindiInstructions =
+          language === "Hindi"
+            ? `\n\nLANGUAGE RULES (IMPORTANT):\n- Write the entire response in Hindi, using Devanagari script.\n- Use simple, everyday spoken Hindi that a patient with no medical background and no English education can understand.\n- Avoid English medical terms. Avoid complex, formal, or bookish Hindi words. Avoid technical Hindi medical vocabulary.\n- Keep the exact same structure: the same emoji section headers (🔬 👤 ⚠️ 🏥 📞), the same • bullet style, and the same section order as specified above.\n- Keep following all the other rules above (no drug names, no medical codes/numbers, do not use "we" — say "doctors" or "the study team" translated naturally into simple Hindi).`
+            : "";
 
         const prompt = `Do not write any introduction or preamble. Start your response directly with the 🔬 emoji. No intro sentences before the sections.
 
@@ -47,6 +59,7 @@ Write 2 simple sentences only.
 
 📞 How to apply?
 One sentence about contacting the hospital.
+${hindiInstructions}
 
 Trial details:
 Title: ${title}
