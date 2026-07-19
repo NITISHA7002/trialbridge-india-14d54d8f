@@ -118,6 +118,11 @@ export function TrialCard({
                           {l.status && ` — ${l.status.replace(/_/g, " ").toLowerCase()}`}
                         </span>
                       </div>
+                      {l.contacts.length === 0 && (
+                        <div className="ml-4 mt-0.5 text-[11px] text-muted-foreground">
+                          No site-specific contact listed, please use the central study contact below.
+                        </div>
+                      )}
                       {l.contacts.length > 0 && (
                         <div className="ml-4 mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
                           {l.contacts.map((c, j) => (
@@ -215,6 +220,7 @@ export function TrialCard({
 
       <SimplifiedSummary trial={trial} />
 
+      <div className="text-xs font-medium text-muted-foreground">Central study contact — covers all locations</div>
       <div className="rounded-md border border-border bg-muted/30 p-3 text-xs space-y-1.5">
         {trial.contacts.length > 0 ? (
           trial.contacts.map((c, i) => (
