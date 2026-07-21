@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Hospital, ShieldCheck, Lock, HeartHandshake, Database, Globe2, Activity, CheckCircle2, ClipboardCheck } from "lucide-react";
-import heroImage from "@/assets/hackthone-photo.webp.asset.json";
+import heroImage from "@/assets/hero-hackthon-2.jpg.asset.json";
 
 
 export const Route = createFileRoute("/")({
@@ -64,8 +64,8 @@ function Home() {
             <div className="flex justify-center lg:justify-end">
               <img
                 src={heroImage.url}
-                alt="Doctor consulting with a patient and family member"
-                className="rounded-2xl shadow-lg w-full max-w-md object-cover"
+                alt="Nurse consulting with a young couple at home"
+                className="rounded-2xl shadow-lg w-full max-w-sm sm:max-w-md lg:max-w-lg aspect-[3/2] object-cover object-center"
               />
             </div>
           </div>
