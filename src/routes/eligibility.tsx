@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { searchTrials, type SearchInput, type Trial } from "@/lib/clinical-trials";
 import { FitResultPanel } from "@/components/site/TrialCard";
@@ -21,10 +21,40 @@ function EligibilityPage() {
   const [results, setResults] = useState<Trial[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const submittedThisLoad = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (submittedThisLoad.current) return;
+    try {
+      const raw = window.sessionStorage.getItem("tb-eligibility-state");
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { form?: SearchInput; results?: Trial[] };
+      if (parsed.form) setForm(parsed.form);
+      if (parsed.results) setResults(parsed.results);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const resetSearch = () => {
+    submittedThisLoad.current = false;
+    setForm({ condition: "", age: null, gender: "" });
+    setResults(null);
+    setError(null);
+    if (typeof window !== "undefined") {
+      try {
+        window.sessionStorage.removeItem("tb-eligibility-state");
+      } catch {
+        // ignore
+      }
+    }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.condition.trim()) return;
+    submittedThisLoad.current = true;
     setLoading(true);
     setError(null);
     setResults(null);
@@ -40,7 +70,18 @@ function EligibilityPage() {
     }
     try {
       const trials = await searchTrials(form);
-      setResults(trials.filter((t) => t.matchScore >= 50));
+      const filtered = trials.filter((t) => t.matchScore >= 50);
+      setResults(filtered);
+      if (typeof window !== "undefined") {
+        try {
+          window.sessionStorage.setItem(
+            "tb-eligibility-state",
+            JSON.stringify({ form, results: filtered }),
+          );
+        } catch {
+          // ignore
+        }
+      }
     } catch {
       setError("Could not reach ClinicalTrials.gov. Please try again.");
     } finally {
@@ -119,9 +160,18 @@ function EligibilityPage() {
             </p>
           ) : (
             <>
-              <p className="text-sm text-muted-foreground">
-                Found {results.length} trial{results.length === 1 ? "" : "s"} you may qualify for.
-              </p>
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <p className="text-sm text-muted-foreground">
+                  Found {results.length} trial{results.length === 1 ? "" : "s"} you may qualify for.
+                </p>
+                <button
+                  type="button"
+                  onClick={resetSearch}
+                  className="inline-flex items-center rounded-md border border-[color:var(--brand)] text-[color:var(--brand-dark)] px-3 py-1.5 text-xs font-medium hover:bg-[color:var(--brand-soft)]"
+                >
+                  New Search
+                </button>
+              </div>
               {results.map((t) => (
                 <EligibilityCard key={t.nctId} trial={t} input={form} />
               ))}

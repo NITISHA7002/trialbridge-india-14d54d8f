@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as HospitalsRouteImport } from './routes/hospitals'
 import { Route as FindTrialsRouteImport } from './routes/find-trials'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
@@ -35,11 +34,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HospitalsRoute = HospitalsRouteImport.update({
-  id: '/hospitals',
-  path: '/hospitals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FindTrialsRoute = FindTrialsRouteImport.update({
@@ -90,7 +84,6 @@ export interface FileRoutesByFullPath {
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
-  '/hospitals': typeof HospitalsRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -104,7 +97,6 @@ export interface FileRoutesByTo {
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
-  '/hospitals': typeof HospitalsRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -119,7 +111,6 @@ export interface FileRoutesById {
   '/eligibility': typeof EligibilityRoute
   '/faq': typeof FaqRoute
   '/find-trials': typeof FindTrialsRoute
-  '/hospitals': typeof HospitalsRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -135,7 +126,6 @@ export interface FileRouteTypes {
     | '/eligibility'
     | '/faq'
     | '/find-trials'
-    | '/hospitals'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
@@ -149,7 +139,6 @@ export interface FileRouteTypes {
     | '/eligibility'
     | '/faq'
     | '/find-trials'
-    | '/hospitals'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
@@ -163,7 +152,6 @@ export interface FileRouteTypes {
     | '/eligibility'
     | '/faq'
     | '/find-trials'
-    | '/hospitals'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
@@ -178,7 +166,6 @@ export interface RootRouteChildren {
   EligibilityRoute: typeof EligibilityRoute
   FaqRoute: typeof FaqRoute
   FindTrialsRoute: typeof FindTrialsRoute
-  HospitalsRoute: typeof HospitalsRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
@@ -207,13 +194,6 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/hospitals': {
-      id: '/hospitals'
-      path: '/hospitals'
-      fullPath: '/hospitals'
-      preLoaderRoute: typeof HospitalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/find-trials': {
@@ -282,7 +262,6 @@ const rootRouteChildren: RootRouteChildren = {
   EligibilityRoute: EligibilityRoute,
   FaqRoute: FaqRoute,
   FindTrialsRoute: FindTrialsRoute,
-  HospitalsRoute: HospitalsRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
