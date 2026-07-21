@@ -48,6 +48,23 @@ function FindTrials() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const STORAGE_KEY = "tb-find-trials-state";
+
+  useEffect(() => {
+    if (search.nctId) return;
+    if (results !== null) return;
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { form?: SearchInput; results?: Trial[] };
+      if (saved.form) setForm(saved.form);
+      if (saved.results) setResults(saved.results);
+    } catch {
+      // ignore corrupt or unavailable storage
+    }
+  }, [search.nctId, results]);
+
+
   useEffect(() => {
     if (!search.nctId) return;
     let cancelled = false;
@@ -80,12 +97,28 @@ function FindTrials() {
     try {
       const trials = await searchTrials(form);
       setResults(trials);
+      try {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ form, results: trials }));
+      } catch {
+        // storage may be unavailable
+      }
     } catch (err) {
       setError("Could not reach ClinicalTrials.gov. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  const handleNewSearch = () => {
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch {}
+    setForm({ condition: "", age: null, gender: "", city: "" });
+    setResults(null);
+    setFocusedTrial(null);
+    setError(null);
+  };
+
 
   return (
     <div className="tb-bg-find">
@@ -163,11 +196,20 @@ function FindTrials() {
 
       {results && (
         <div className="mt-8">
-          <p className="text-sm text-muted-foreground mb-4">
-            {results.length === 0
-              ? "No recruiting trials found. Try removing the city or broadening the condition."
-              : `Found ${results.length} recruiting trial${results.length === 1 ? "" : "s"} in India.`}
-          </p>
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-muted-foreground">
+              {results.length === 0
+                ? "No recruiting trials found. Try removing the city or broadening the condition."
+                : `Found ${results.length} recruiting trial${results.length === 1 ? "" : "s"} in India.`}
+            </p>
+            <button
+              type="button"
+              onClick={handleNewSearch}
+              className="inline-flex items-center justify-center rounded-md border border-border bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+            >
+              New Search
+            </button>
+          </div>
           <div className="space-y-5">
             {results.map((t) => (
               <TrialCard key={t.nctId} trial={t} />
@@ -175,6 +217,7 @@ function FindTrials() {
           </div>
         </div>
       )}
+
 
       {focusedTrial && !results && (
         <div className="mt-8 space-y-5">
